@@ -1,12 +1,9 @@
 package br.com.fiap.postech.fastfood.produto.config
 
-import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.AtualizarProdutoUseCase
-import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.BuscarProdutoPorCategoriaUseCase
-import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.CadastrarProdutoUseCase
-import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.RemoverProdutoUseCase
 import br.com.fiap.postech.fastfood.produto.adapter.gateway.ProdutoRepositoryImpl
 import br.com.fiap.postech.fastfood.produto.adapter.gateway.jpa.ProdutoRepositoryJpa
 import br.com.fiap.postech.fastfood.produto.domain.repository.ProdutoRepository
+import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -36,5 +33,10 @@ class Configuration {
     @Bean
     fun buscarProdutoPorCategoriaUseCase(produtoRepository: ProdutoRepository): BuscarProdutoPorCategoriaUseCase {
         return BuscarProdutoPorCategoriaUseCase(produtoRepository)
+    }
+
+    @Bean
+    fun buscarProdutoPorIdUseCase(produtoRepository: ProdutoRepository): BuscarProdutoPorIdUseCase {
+        return BuscarProdutoPorIdUseCase(produtoRepository)
     }
 }
