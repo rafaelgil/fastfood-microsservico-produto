@@ -74,16 +74,6 @@ class ControllerAdvice() {
 
         return ResponseEntity(erro, HttpStatus.NOT_FOUND)
     }
-
-    @ExceptionHandler(AlreadyProcessedException::class)
-    fun handleAlreadyProcessedException(ex: AlreadyProcessedException, request: WebRequest): ResponseEntity<ErrorResponse> {
-        val erro = ErrorResponse(
-            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-            "Pagamento já efetuado"
-        )
-
-        return ResponseEntity(erro, HttpStatus.UNPROCESSABLE_ENTITY)
-    }
 }
 
 data class ErrorResponse(

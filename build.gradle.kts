@@ -34,6 +34,11 @@ dependencies {
 	implementation("org.flywaydb:flyway-core:9.19.4")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+
+	testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 }
 
 tasks.withType<KotlinCompile> {
