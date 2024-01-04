@@ -14,18 +14,18 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
-import org.mockito.stubbing.Answer
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import java.math.BigDecimal
 import java.util.*
+import java.util.UUID
 
 
 class ProdutoControllerTest {
@@ -59,7 +59,8 @@ class ProdutoControllerTest {
             buscarProdutoPorIdUseCase
         )
         mockMvc = MockMvcBuilders.standaloneSetup(produtoController)
-            .setControllerAdvice(ControllerAdvice()).build()
+            .setControllerAdvice(ControllerAdvice())
+            .build()
     }
 
     @AfterEach
@@ -82,6 +83,7 @@ class ProdutoControllerTest {
                     .content(asJsonString(produtoRequest()))
             )
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.preco").value("50.0"))
 
             verify(cadastrarProdutoUseCase, times(1)).executa(any())
         }
@@ -99,34 +101,71 @@ class ProdutoControllerTest {
 
             verify(cadastrarProdutoUseCase, never()).executa(any())
         }
+    }
 
-        private fun produtoRequest(
-            descricao: String? = null,
-            categoria: String? = null,
-            preco: BigDecimal? = null
-        ): ProdutoRequest {
-            return ProdutoRequest(
-                descricao = descricao ?: "X-Bacon",
-                categoria = categoria ?: "lanche",
-                preco = preco ?: BigDecimal("50.00")
-            )
+    @Nested
+    inner class AtualizarProduto {
+
+        @Test
+        fun devePermitirAtualizarUmProduto() {
+            `when`(atualizarProdutoUseCase.executa(any(), any()))
+                .thenReturn(produtoResponse())
+
+            mockMvc.perform(
+                put("/produto/{id}", UUID.randomUUID())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(produtoRequest()))
+            ).andExpect(status().isOk)
+
+            verify(atualizarProdutoUseCase, times(1)).executa(any(), any())
         }
 
-        private fun produtoResponse(): Produto {
-            return Produto(
-                id = UUID.randomUUID(),
-                descricao = Descricao(produtoRequest().descricao),
-                categoria = Categoria(produtoRequest().categoria),
-                preco = Preco(produtoRequest().preco)
-            )
-        }
+        @Test
+        @Throws(java.lang.Exception::class)
+        fun `deveGerarExcecao_QuandoAtualizarPrecoInvalido`() {
+            mockMvc.perform(
+                put("/produto", UUID.randomUUID())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(produtoRequest(preco = BigDecimal("0"))))
+            ).andExpect(status().is4xxClientError)
 
-        private fun asJsonString(obj: Any?): String {
-            try {
-                return ObjectMapper().writeValueAsString(obj)
-            } catch (e: java.lang.Exception) {
-                throw RuntimeException(e)
-            }
+            verify(atualizarProdutoUseCase, never()).executa(any(), any())
+        }
+    }
+
+    fun produtoRequest(
+        id: UUID? = null,
+        descricao: String? = null,
+        categoria: String? = null,
+        preco: BigDecimal? = null
+    ): ProdutoRequest {
+        return ProdutoRequest(
+            id = id,
+            descricao = descricao ?: "X-Bacon",
+            categoria = categoria ?: "lanche",
+            preco = preco ?: BigDecimal("50.00")
+        )
+    }
+
+    fun produtoResponse(
+        id: UUID? = null,
+        descricao: String? = null,
+        categoria: String? = null,
+        preco: BigDecimal? = null
+    ): Produto {
+        return Produto(
+            id = id ?: UUID.randomUUID(),
+            descricao = Descricao(descricao ?: produtoRequest().descricao),
+            categoria = Categoria(categoria ?: produtoRequest().categoria),
+            preco = Preco(preco ?: produtoRequest().preco)
+        )
+    }
+
+    fun asJsonString(obj: Any?): String {
+        try {
+            return ObjectMapper().writeValueAsString(obj)
+        } catch (e: java.lang.Exception) {
+            throw RuntimeException(e)
         }
     }
 }
