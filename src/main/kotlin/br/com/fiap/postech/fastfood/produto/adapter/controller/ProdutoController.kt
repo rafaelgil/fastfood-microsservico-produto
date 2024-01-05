@@ -29,8 +29,7 @@ class ProdutoController (
         atualizarProdutoUseCase.executa(id, request.toProduto())
     }
 
-    @DeleteMapping("")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: UUID) {
         removerProdutoUseCase.executa(id)
     }

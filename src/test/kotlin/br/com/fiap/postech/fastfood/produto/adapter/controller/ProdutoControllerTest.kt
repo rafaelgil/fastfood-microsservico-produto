@@ -1,6 +1,8 @@
 package br.com.fiap.postech.fastfood.produto.adapter.controller
 
 import br.com.fiap.postech.fastfood.produto.adapter.presenter.ProdutoRequest
+import br.com.fiap.postech.fastfood.produto.adapter.presenter.ProdutoResponse
+import br.com.fiap.postech.fastfood.produto.adapter.presenter.toProdutoResponse
 import br.com.fiap.postech.fastfood.produto.domain.entity.Produto
 import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.*
 import br.com.fiap.postech.fastfood.produto.domain.valueObjets.Categoria
@@ -18,8 +20,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -130,6 +131,85 @@ class ProdutoControllerTest {
             ).andExpect(status().is4xxClientError)
 
             verify(atualizarProdutoUseCase, never()).executa(any(), any())
+        }
+    }
+
+    @Nested
+    inner class RemoverProduto {
+
+        @Test
+        fun devePermitirRemoverUmProduto() {
+
+            mockMvc.perform(
+                delete("/produto/{id}", UUID.randomUUID())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(UUID.randomUUID()))
+            ).andExpect(status().isOk)
+
+            verify(removerProdutoUseCase, times(1)).executa(any())
+        }
+
+        @Test
+        @Throws(java.lang.Exception::class)
+        fun `deveGerarExcecao_QuandoDeletaProduto_comIdInvalido`() {
+            mockMvc.perform(
+                delete("/produto/{id}", "2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(UUID.randomUUID()))
+            ).andExpect(status().is4xxClientError)
+
+            verify(removerProdutoUseCase, never()).executa(any())
+        }
+    }
+
+    @Nested
+    inner class BuscaProduto {
+
+        @Test
+        fun devePermitirBuscarUmProduto() {
+            `when`(buscarProdutoPorIdUseCase.executa(any()))
+                .thenReturn(produtoResponse())
+
+            mockMvc.perform(
+                get("/produto/{id}", UUID.randomUUID())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(UUID.randomUUID()))
+            ).andExpect(status().isOk)
+
+            verify(buscarProdutoPorIdUseCase, times(1)).executa(any())
+        }
+
+        @Test
+        @Throws(java.lang.Exception::class)
+        fun `deveGerarExcecao_QuandoBuscaProduto_comIdInvalido`() {
+            mockMvc.perform(
+                get("/produto/{id}", "2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(UUID.randomUUID()))
+            ).andExpect(status().is4xxClientError)
+
+            verify(buscarProdutoPorIdUseCase, never()).executa(any())
+        }
+    }
+
+    @Nested
+    inner class BuscarProdutoPorCategoria {
+
+        @Test
+        fun devePermitirBuscarProdutoPorCategoria() {
+
+            val listaDeProdutos = mutableListOf<Produto>()
+            listaDeProdutos.add(produtoResponse())
+
+            `when`(buscarProdutoPorCategoriaUseCase.executa(any()))
+                .thenReturn(listaDeProdutos)
+
+            mockMvc.perform(
+                get("/produto/categoria?nome=lanche")
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isOk)
+
+            verify(buscarProdutoPorCategoriaUseCase, times(1)).executa(any())
         }
     }
 
