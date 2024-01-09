@@ -1,8 +1,6 @@
 package br.com.fiap.postech.fastfood.produto.adapter.controller
 
 import br.com.fiap.postech.fastfood.produto.adapter.presenter.ProdutoRequest
-import br.com.fiap.postech.fastfood.produto.adapter.presenter.ProdutoResponse
-import br.com.fiap.postech.fastfood.produto.adapter.presenter.toProdutoResponse
 import br.com.fiap.postech.fastfood.produto.domain.entity.Produto
 import br.com.fiap.postech.fastfood.produto.domain.usecase.produto.*
 import br.com.fiap.postech.fastfood.produto.domain.valueObjets.Categoria
