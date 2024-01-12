@@ -42,7 +42,9 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.25.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 
-    testImplementation("io.cucumber:cucumber-java:7.15.0")
+    testImplementation("io.cucumber:cucumber-java:6.10.4")
+    testImplementation("io.cucumber:cucumber-junit:6.10.4")
+    testImplementation("org.junit.vintage:junit-vintage-engine:5.9.3")
 }
 
 tasks.withType<KotlinCompile> {
@@ -63,7 +65,6 @@ jacoco {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
-    executionData(files(layout.buildDirectory.dir("/jacoco/test.exec"), layout.buildDirectory.dir("/results/jacoco/cucumber.exec")))
     reports {
         xml.required = true
         csv.required = false
@@ -111,11 +112,13 @@ task("cucumber") {
         javaexec {
             mainClass.set("io.cucumber.core.cli.Main")
             classpath = cucumberRuntime + sourceSets.main.get().output + sourceSets.test.get().output
-            args = listOf("--plugin", "pretty", "--glue", "br.com.fiap.postech.fastfood.produto.bdd", "src/test/resources")
-            val jacocoAgent = zipTree(configurations.jacocoAgent.get().singleFile)
-                .filter { it.name == "jacocoagent.jar" }
-                .singleFile
-            jvmArgs = listOf("-javaagent:$jacocoAgent=destfile=" +  layout.buildDirectory.dir("/results/jacoco/cucumber.exec") + ",append=false")
+            args = listOf(
+                    "--plugin", "pretty",
+                    "--plugin", "html:target/cucumber-report.html",
+                    "--glue", "br.com.fiap.postech.fastfood.produto.bdd",
+                    "src/test/resources"
+            )
+            environment("CUCUMBER_PUBLISH_QUIET", true)
         }
     }
 }
