@@ -1,29 +1,64 @@
 package br.com.fiap.postech.fastfood.produto.bdd
 
-import io.cucumber.java.Before
-import io.cucumber.java.en.And
-import io.cucumber.java.en.Given
+import io.cucumber.java.pt.Dado
+import io.cucumber.java.pt.Então
+import io.cucumber.java.pt.Quando
 
 class ProdutoStepDefinition {
 
-    private var firstNumber: Int = 0
-    private var secondNumber: Int = 0
-    private var result: Int = 0
-
-    @Before
-    fun setUp() {
-        firstNumber = 0
-        secondNumber = 0
-        result = 0
+    @Quando("submeter um novo produto")
+    fun `submeter um novo produto`() {
+        assert(true)
     }
 
-    @Given("a integer {int}")
-    fun `a integer`(number: Int) {
-        firstNumber = number
+    @Então("o produto é registrada com sucesso")
+    fun `o produto é registrada com sucesso`() {
+        assert(true)
     }
 
-    @And("a second integer {int}")
-    fun `a second integer`(number: Int) {
-        secondNumber = number
+    @Dado("que produto já foi cadastrado")
+    fun `que produto já foi cadastrado`() {
+        assert(true)
     }
+
+    @Quando("requisitar a busca do produto")
+    fun `requisitar a busca do produto`() {
+        assert(true)
+    }
+
+    @Então("o produto é exibido com sucesso")
+    fun `o produto é exibido com sucesso`() {
+        assert(true)
+    }
+
+    @Quando("requisitar a busca por categoria")
+    fun `requisitar a busca por categoria`() {
+        assert(true)
+    }
+
+    @Então("os produtos são exibidos com sucesso")
+    fun `os produtos são exibidos com sucesso`() {
+        assert(true)
+    }
+
+    @Quando("requisitar a alteração do produto")
+    fun `requisitar a alteração do produto`() {
+        assert(true)
+    }
+
+    @Então("o produto é atualizado com sucesso")
+    fun `o produto é atualizado com sucesso`() {
+        assert(true)
+    }
+
+    @Quando("requisitar a exclusão do produto")
+    fun `requisitar a exclusão do produto`() {
+        assert(true)
+    }
+
+    @Então("o produto é removido com sucesso")
+    fun `o produto é removido com sucesso`() {
+        assert(true)
+    }
+
 }

@@ -45,6 +45,13 @@ dependencies {
     testImplementation("io.cucumber:cucumber-java:6.10.4")
     testImplementation("io.cucumber:cucumber-junit:6.10.4")
     testImplementation("org.junit.vintage:junit-vintage-engine:5.9.3")
+
+    testImplementation("io.rest-assured:spring-mock-mvc:5.3.0")
+    testImplementation("io.rest-assured:json-schema-validator:5.3.1")
+    testImplementation("io.rest-assured:rest-assured:5.3.0") {
+        exclude(group = "org.codehaus.groovy", module = "groovy")
+        exclude(group = "org.codehaus.groovy", module = "groovy-xml")
+    }
 }
 
 tasks.withType<KotlinCompile> {
