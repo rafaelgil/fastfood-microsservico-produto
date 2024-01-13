@@ -5,7 +5,7 @@ plugins {
     jacoco
     id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
-    id("org.sonarqube") version "3.0"
+    id("org.sonarqube") version "4.4.1.3373"
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.8.21"
@@ -21,6 +21,9 @@ java {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
 }
 
 dependencies {
@@ -35,6 +38,8 @@ dependencies {
     implementation("org.postgresql:postgresql:42.2.1")
 
     implementation("org.flywaydb:flyway-core:9.19.4")
+
+    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.4.1.3373")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
@@ -130,31 +135,23 @@ task("cucumber") {
     }
 }
 
-//sonarqube {
-//    properties {
-//        property("sonar.sourceEncoding", "UTF-8")
-//        property("sonar.projectName", "fastfood-microsservico-produto")
-//        property("sonar.projectKey", "fastfood-microsservico-produto")
-//        property(
-//            "sonar.coverage.exclusions",
-//            "**/config/*.*," +
-//                    "**/exception/**," +
-//                    "**/ControllerAdvice.*," +
-//                    "**/ValidaCvvCartaoApplication*"
-//        )
-//        property("sonar.exclusions", "**/application/domain/utils/*.*" +
-//                "**/application/domain/utils/**," +
-//                "**/application/domain/model/**/*.*," +
-//                "**/adapter/outbound/**/dto/*.*," +
-//                "**/adapter/outbound/**/entity/*.*," +
-//                "**/adapter/outbound/mapper/*.*," +
-//                "**/exception/**/*.*," +
-//                "**/config/*.*," +
-//                "**/config/**/**/*.*," +
-//                "**/ValidaCvvCartaoApplication.*," +
-//                "**/ValidaCvvCartaoApplication*")
-//    }
-//}
+apply(plugin = "org.sonarqube")
+
+val coverageExclusions = listOf(
+        "**/config/**",
+        "**/exception/**",
+        "**/ControllerAdvice.*",
+        "**/FastFoodApplication.*"
+)
+
+sonarqube {
+    properties {
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.dir("/reports/jacoco/test/*.xml"))
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.coverage.exclusions",coverageExclusions)
+        property("sonar.exclusions", coverageExclusions)
+    }
+}
 
 flyway {
     url = "jdbc:postgresql://localhost:5432/fast-food"
