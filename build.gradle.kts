@@ -150,6 +150,9 @@ sonarqube {
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.coverage.exclusions",coverageExclusions)
         property("sonar.exclusions", coverageExclusions)
+        property("sonar.projectKey", "FelipeFreitasGit_fastfood-microsservico-produto")
+        property("sonar.organization", "felipefreitasgit")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
