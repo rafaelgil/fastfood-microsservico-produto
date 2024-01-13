@@ -146,6 +146,8 @@ val coverageExclusions = listOf(
 
 sonar {
     properties {
+        property("sonar.gradle.skipCompile", true)
+        property("sonar.skipCompile", true)
         property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.dir("/reports/jacoco/test/*.xml"))
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.coverage.exclusions",coverageExclusions)
