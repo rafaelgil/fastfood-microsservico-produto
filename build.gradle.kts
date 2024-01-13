@@ -153,6 +153,8 @@ sonarqube {
         property("sonar.projectKey", "FelipeFreitasGit_fastfood-microsservico-produto")
         property("sonar.organization", "felipefreitasgit")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.sources", "src")
     }
 }
 
