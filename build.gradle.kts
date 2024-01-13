@@ -144,7 +144,7 @@ val coverageExclusions = listOf(
         "**/FastFoodApplication.*"
 )
 
-sonarqube {
+sonar {
     properties {
         property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.dir("/reports/jacoco/test/*.xml"))
         property("sonar.java.coveragePlugin", "jacoco")
