@@ -80,7 +80,7 @@ tasks.jacocoTestReport {
     reports {
         xml.required = true
         csv.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacoco")
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
 }
 
@@ -146,15 +146,14 @@ val coverageExclusions = listOf(
 
 sonar {
     properties {
-        property("sonar.gradle.skipCompile", true)
-        property("sonar.skipCompile", true)
+        property("sonar.projectKey", "FelipeFreitasGit_fastfood-microsservico-produto")
+        property("sonar.organization", "felipefreitasgit")
+        property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.dir("/reports/jacoco/test/*.xml"))
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.coverage.exclusions",coverageExclusions)
         property("sonar.exclusions", coverageExclusions)
-        property("sonar.projectKey", "FelipeFreitasGit_fastfood-microsservico-produto")
-        property("sonar.organization", "felipefreitasgit")
-        property("sonar.host.url", "https://sonarcloud.io")
+
     }
 }
 
