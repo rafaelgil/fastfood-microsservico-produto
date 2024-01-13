@@ -154,7 +154,7 @@ sonarqube {
         property("sonar.organization", "felipefreitasgit")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.sources", "“${project.projectDir}/src/main/kotlin”")
+        property("sonar.sources", listOf("${ project.projectDir }/src/main/kotlin"))
     }
 }
 
