@@ -17,6 +17,7 @@ import org.mockito.kotlin.verify
 import java.math.BigDecimal
 import java.util.*
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.assertThrows
 
 class AtualizarProdutoUseCaseTest {
 
@@ -58,6 +59,21 @@ class AtualizarProdutoUseCaseTest {
         assertThat(executa).isNotNull()
         assertThat(executa.toProdutoResponse().categoria).isEqualTo(Categoria("lanche").categoria)
         verify(produtoRepository, times(1)).atualizar(any(),any())
+    }
+
+    @Test
+    fun deveLancarExcecaoQuandoProdutoNaoEncontrado() {
+
+        `when`(produtoRepository.existeProduto(any())).thenReturn(false)
+
+        val idUUID = UUID.fromString("259bdc02-1ab5-11ee-be56-0242ac120003")
+        val produto = createProduto()
+
+        assertThrows<IllegalArgumentException> {
+            atualizarProdutoUseCase.executa(idUUID, produto)
+        }
+
+        verify(produtoRepository, times(0)).atualizar(any(), any())
     }
 
     fun createProduto(

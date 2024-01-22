@@ -100,6 +100,34 @@ class ProdutoControllerTest {
 
             verify(cadastrarProdutoUseCase, never()).executa(any())
         }
+
+        @Test
+        @Throws(java.lang.Exception::class)
+        fun `deveGerarExcecao_QuandoCadastrarDescricaoInvalida`() {
+            mockMvc.perform(
+                post("/produto")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(produtoRequest(descricao = "")))
+            )
+                .andExpect(status().is4xxClientError)
+                .andExpect(jsonPath("$.mensagem").value("Descrição deve ser informado"))
+
+            verify(cadastrarProdutoUseCase, never()).executa(any())
+        }
+
+        @Test
+        @Throws(java.lang.Exception::class)
+        fun `deveGerarExcecao_QuandoCadastrarPrecoInvalida`() {
+            mockMvc.perform(
+                post("/produto")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(produtoRequest(preco = BigDecimal(0))))
+            )
+                .andExpect(status().is4xxClientError)
+                .andExpect(jsonPath("$.mensagem").value("Preco não pode ser menor ou igual a zero"))
+
+            verify(cadastrarProdutoUseCase, never()).executa(any())
+        }
     }
 
     @Nested

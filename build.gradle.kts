@@ -48,7 +48,7 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 
     testImplementation("io.cucumber:cucumber-java:6.10.4")
-    testImplementation("io.cucumber:cucumber-junit:6.10.4")
+    //testImplementation("io.cucumber:cucumber-junit:6.10.4")
     testImplementation("org.junit.vintage:junit-vintage-engine:5.9.3")
 
     testImplementation("io.rest-assured:spring-mock-mvc:5.3.0")
