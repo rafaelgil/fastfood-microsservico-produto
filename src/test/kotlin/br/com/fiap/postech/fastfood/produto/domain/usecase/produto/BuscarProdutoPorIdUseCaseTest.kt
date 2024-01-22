@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -58,6 +59,20 @@ class BuscarProdutoPorIdUseCaseTest {
         Assertions.assertThat(executa).isNotNull()
         Assertions.assertThat(executa.toProdutoResponse().categoria).isEqualTo(Categoria("lanche").categoria)
         verify(produtoRepository, Mockito.times(1)).buscaPorId(any())
+    }
+
+    @Test
+    fun deveLancarExcecaoQuandoBuscarProdutoPorId() {
+
+        Mockito.`when`(produtoRepository.existeProduto(any())).thenReturn(false)
+
+        val idUUID = UUID.fromString("259bdc02-1ab5-11ee-be56-0242ac120003")
+
+        assertThrows<IllegalArgumentException> {
+            buscarProdutoPorIdUseCase.executa(idUUID)
+        }
+
+        verify(produtoRepository, Mockito.times(0)).buscaPorId(any())
     }
 
     fun createProduto(

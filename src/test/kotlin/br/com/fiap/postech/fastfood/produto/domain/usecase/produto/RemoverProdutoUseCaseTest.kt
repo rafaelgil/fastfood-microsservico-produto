@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -55,6 +56,20 @@ class RemoverProdutoUseCaseTest {
         removerProdutoUseCase.executa(idUUID)
 
         verify(produtoRepository, Mockito.times(1)).deletaProduto(any())
+    }
+
+    @Test
+    fun deveLancarExcecaoQuandoRemoverProduto() {
+
+        Mockito.`when`(produtoRepository.existeProduto(any())).thenReturn(false)
+
+        val idUUID = UUID.fromString("259bdc02-1ab5-11ee-be56-0242ac120003")
+
+        assertThrows<IllegalArgumentException> {
+            removerProdutoUseCase.executa(idUUID)
+        }
+
+        verify(produtoRepository, Mockito.times(0)).deletaProduto(any())
     }
 
     fun createProduto(
