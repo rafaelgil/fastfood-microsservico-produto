@@ -47,7 +47,7 @@ jobs:
         run: ./gradlew test
 
   deploy:
-    needs: sonar
+    needs: test
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
